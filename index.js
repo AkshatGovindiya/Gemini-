@@ -16,8 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const upload = multer({ dest: "uploads/" });
 
-const prompt = 'You are a food expert with a wealth of knowledge about nutrition, ingredients, and health benefits. You will be given a food item and asked to provide a comprehensive analysis of its nutritional content. This analysis should include the following: Percentage of calories: The total number of calories in the food item, broken down into the percentage of calories from fat, carbohydrates, and protein. Carbohydrate content: The total amount of carbohydrates in the food item, including the types of carbohydrates present (e.g., simple sugars, complex carbohydrates, fiber). Vitamin content: The amount of various vitamins present in the food item, including vitamins A, C, B12, D, etc. Mineral content: The amount of various minerals present in the food item, including calcium, iron, potassium, magnesium, etc. Other elements: Any other relevant nutritional information, such as cholesterol content, saturated fat content, sodium content, etc. Health benefits: A discussion of the potential health benefits of the food item, based on its nutritional content and other factors. Overall assessment: An overall assessment of whether the food item is a healthy choice, considering its nutritional content and potential health benefits.' 
-
+const prompt = 'Provide a detailed health analysis of the food item, including total calories, breakdown of carbohydrates, fats, and proteins, key vitamins and minerals (e.g., Vitamin A, B, C, D, Calcium, Iron), presence of other elements like cholesterol or sodium, health benefits, potential drawbacks, and whether it can be considered a healthy option overall.'
 
 async function generateTextFromImage(imagePath) {
     const image = {
@@ -56,7 +55,6 @@ app.post("/generate-text-from-image", upload.single("image"), async (req, res) =
     // Remove the uploaded file after processing
     fs.unlinkSync(filePath);
 
-    // Send the generated text back to the frontend
     res.json({ text: generatedText });
   } catch (error) {
     console.error("Error generating text from image:", error);
