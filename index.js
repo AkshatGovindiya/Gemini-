@@ -6,16 +6,17 @@ const fs = require("fs");
 const path = require("path");
 
 // Initialize Google Generative AI client
-const genAI = new GoogleGenerativeAI("AIzaSyAVu4ut5_IpsG3C8nZkTClGmFCkkIItVP0"); // Use your own API key);
+const genAI = new GoogleGenerativeAI("AIzaSyAVu4ut5_IpsG3C8nZkTClGmFCkkIItVP0"); 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const app = express();
-app.use(cors()); // Enable CORS for frontend requests
+app.use(cors()); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configure multer for file uploads
 const upload = multer({ dest: "uploads/" });
+
+const prompt = 'You are a food expert with a wealth of knowledge about nutrition, ingredients, and health benefits. You will be given a food item and asked to provide a comprehensive analysis of its nutritional content. This analysis should include the following: Percentage of calories: The total number of calories in the food item, broken down into the percentage of calories from fat, carbohydrates, and protein. Carbohydrate content: The total amount of carbohydrates in the food item, including the types of carbohydrates present (e.g., simple sugars, complex carbohydrates, fiber). Vitamin content: The amount of various vitamins present in the food item, including vitamins A, C, B12, D, etc. Mineral content: The amount of various minerals present in the food item, including calcium, iron, potassium, magnesium, etc. Other elements: Any other relevant nutritional information, such as cholesterol content, saturated fat content, sodium content, etc. Health benefits: A discussion of the potential health benefits of the food item, based on its nutritional content and other factors. Overall assessment: An overall assessment of whether the food item is a healthy choice, considering its nutritional content and potential health benefits.' 
 
 
 async function generateTextFromImage(imagePath) {
@@ -27,12 +28,11 @@ async function generateTextFromImage(imagePath) {
     };
   
     try {
-      const result = await model.generateContent([ image]);
-      console.log("API Response:", JSON.stringify(result, null, 2)); // Log the complete response
+      const result = await model.generateContent([ prompt,image]);
+      console.log("API Response:", JSON.stringify(result, null, 2)); 
   
-      // Check if the response structure is as expected
       if (result && result.response && result.response.candidates && result.response.candidates.length > 0) {
-        return result.response.candidates[0].content.parts[0].text; // Access the correct path to get the text
+        return result.response.candidates[0].content.parts[0].text; 
       } else {
         throw new Error("Unexpected response structure from the API.");
       }
@@ -64,7 +64,6 @@ app.post("/generate-text-from-image", upload.single("image"), async (req, res) =
   }
 });
 
-// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
